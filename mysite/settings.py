@@ -124,8 +124,8 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # 이메일 서버 구성
-EMAIL_HOST = 'smtp.gail.com'
-EMAIL_HOST_USER = 'khkkor1@gmail.com'
-EMAIL_HOST_PASSWORD = 'HBCOIIROHRJXJZFV'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
