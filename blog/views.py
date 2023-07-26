@@ -9,7 +9,7 @@ from taggit.models import Tag
 from blog.forms import EmailPostForm, CommentForm
 from blog.models import Post
 
-from django.contrib.postgres.search import SearchVector
+from django.contrib.postgres.search import SearchVector, TrigramSimilarity
 from .forms import EmailPostForm, CommentForm, SearchForm
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 
@@ -102,14 +102,11 @@ def post_search(request):
         form = SearchForm(request.GET)
         if form.is_valid():
             query = form.cleaned_data['query']
-            search_vector = SearchQuery('title', 'body')
-            search_query = SearchQuery(query)
             results = Post.published.annotate(
-                search=SearchVector,
-                rank=SearchRank(search_vector, search_query)
-            ).filter(search=query)
-    return render(request,
-                  'blog/post/search.html',
-                  {'form': form,
-                   'query': query,
-                   'results': results})
+                similarity=TrigramSimilarity('title', query),
+            ).filter(similarity__gt=0.1).order_by('-similarity')
+    return render(request, 'blog/post/search.html', {
+        'form': form,
+        'query': query,
+        'results': results
+    })
